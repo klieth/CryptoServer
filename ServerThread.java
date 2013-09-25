@@ -8,6 +8,14 @@ public class ServerThread extends Thread {
 		s = socket;
 	}
 	public void run() {
-		System.out.println("Hello!");
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			while (s.isConnected() && !s.isClosed()) {
+				System.out.println(in.readLine());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Done!");
 	}
 }
