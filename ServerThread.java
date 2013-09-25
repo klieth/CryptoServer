@@ -11,7 +11,9 @@ public class ServerThread extends Thread {
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			while (s.isConnected() && !s.isClosed()) {
-				System.out.println(in.readLine());
+				String line = in.readLine();
+				if (line.equals("exit")) break;
+				System.out.println(line);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
