@@ -63,25 +63,31 @@ public class ServerThread extends Thread {
 				} else if (line.startsWith("MESG")) {
 					if (command.length != 2) {
 						out.println("500 Wrong number of arguments");
+						System.out.println("Wrong number of arguments");
 						continue;
 					} else if (!command[1].startsWith("To:")) {
 						out.println("500 Incorrect argument");
+						System.out.println("Incorrect argument");
 						continue;
 					} else if (this.loggedInUser == null) {
 						out.println("500 No user logged in");
+						System.out.println("No user logged in");
 						continue;
 					} else if (inMessage) {
 						out.println("500 Message already started");
+						System.out.println("Message already started");
 						continue;
 					}
 					String recipient = command[1].substring(3);
 					if (!users.contains(recipient)) {
-						out.println("500 Unknown user");
+						out.println("500 Unknown recipient");
+						System.out.println("Unknown recipient");
 						continue;
 					}
 					inMessage = true;
 					messageRecipient = recipient;
 					out.println("250 Ok");
+					System.out.println("Ok");
 				} else if (line.startsWith("DATA")) {
 					if (command.length != 1) {
 						out.println("500 Wrong number of arguments");
