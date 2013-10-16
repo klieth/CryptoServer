@@ -37,9 +37,11 @@ public class ServerThread extends Thread {
 				if (command[0].equals("USER")) {
 					if (command.length != 2) {
 						out.println("500 Wrong number of arguments");
+						System.out.println("Wrong number of arguments");
 						continue;
 					} else if (this.loggedInUser != null) {
 						out.println("500 Already logged in");
+						System.out.println("Already logged in");
 						continue;
 					}
 					// hack for testing
@@ -51,8 +53,10 @@ public class ServerThread extends Thread {
 					}
 					if (this.loggedInUser != null) {
 						out.println("230 Logged in");
+						System.out.println("Logged in");
 					} else {
 						out.println("500 Unknown user");
+						System.out.println("Unknown user");
 						continue;
 					}
 					// ----------------
