@@ -99,24 +99,28 @@ public class ServerThread extends Thread {
 						out.println("500 Must start a message before sending data");
 						continue;
 					}
-					out.println("354 Enter message, ending with a “.” on a line by itself.");
+					out.println("354 Enter message, ending with a \".\" on a line by itself.");
+					System.out.println("Enter message, ending with a \".\" on a line by itself.");
 					messageData = "";
 					String dataLine;
 					while (!(dataLine = in.readLine()).equals(".")) {
 						messageData += dataLine + "\n";
 					}
-					out.println("250 Ok");
 					System.out.println("Sending message to: " + messageRecipient);
 					System.out.println(messageData);
 					inMessage = false;
 					messageRecipient = null;
 					messageData = null;
+					out.println("250 Ok");
+					System.out.println("Ok");
 				} else if (line.startsWith("QUIT")) {
 					if (command.length != 1) {
 						out.println("500 Wrong number of arguments");
+						System.out.println("Wrong number of arguments");
 						continue;
 					} else if (this.loggedInUser == null) {
 						out.println("500 No user logged in");
+						System.out.println("No user logged in");
 						continue;
 					}
 					this.loggedInUser = null;
@@ -124,6 +128,7 @@ public class ServerThread extends Thread {
 					messageRecipient = null;
 					messageData = null;
 					out.println("221 Logged out");
+					System.out.println("Logged out");
 				} else {
 					out.println("Command \"" + command[0] + "\" was not recognized");
 				}
