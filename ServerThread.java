@@ -130,7 +130,7 @@ public class ServerThread extends Thread {
 					out.println("221 Logged out");
 					System.out.println("Logged out");
 				} else {
-					out.println("Command \"" + command[0] + "\" was not recognized");
+					out.println("500 Command \"" + command[0] + "\" was not recognized");
 				}
 			}
 			if (line == null) {
