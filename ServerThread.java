@@ -18,6 +18,7 @@ public class ServerThread extends Thread {
 		users.add("kai");
 		users.add("bill");
 		users.add("bob");
+		users.add("tyler");
 		// ----------------
 	}
 	public void run() {
@@ -88,6 +89,7 @@ public class ServerThread extends Thread {
 						out.println("500 Must start a message before sending data");
 						continue;
 					}
+					out.println("354 Enter message, ending with a “.” on a line by itself.");
 					messageData = "";
 					String dataLine;
 					while (!(dataLine = in.readLine()).equals(".")) {
