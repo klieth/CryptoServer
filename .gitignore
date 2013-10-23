@@ -1,6 +1,7 @@
 *.swp
 CryptoClient.java
 *docx*
+notes.txt
 # Package Files #
 *.class
 *.jar
