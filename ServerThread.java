@@ -30,7 +30,6 @@ public class ServerThread extends Thread {
 			out.println("220 Service ready");
 			boolean inMessage = false;
 			String messageRecipient = null;
-			String messageData = null;
 			while ((line = in.readLine()) != null) {
 				String[] command = line.split(" ");
 				System.out.println("Received \"" + line + "\" from client.");
@@ -101,16 +100,26 @@ public class ServerThread extends Thread {
 					}
 					out.println("354 Enter message, ending with a \".\" on a line by itself.");
 					System.out.println("Enter message, ending with a \".\" on a line by itself.");
-					messageData = "";
+					Message m = new Message(messageRecipient);
 					String dataLine;
 					while (!(dataLine = in.readLine()).equals(".")) {
-						messageData += dataLine + "\n";
+						m.writeln(dataLine);
 					}
+					int max_attempts = 2;
+					for (int i = 0; i < max_attempts; i++) {
+						if (!m.store()) {
+							System.out.println("Failed to store message, on attempt " + (i + 1) + "/" + max_attempts);
+						} else {
+							System.out.println("Message saved!");
+							break;
+						}
+					}
+					/*
 					System.out.println("Sending message to: " + messageRecipient);
 					System.out.println(messageData);
+					*/
 					inMessage = false;
 					messageRecipient = null;
-					messageData = null;
 					out.println("250 Ok");
 					System.out.println("Ok");
 				} else if (line.startsWith("QUIT")) {
@@ -126,7 +135,6 @@ public class ServerThread extends Thread {
 					this.loggedInUser = null;
 					inMessage = false;
 					messageRecipient = null;
-					messageData = null;
 					out.println("221 Logged out");
 					System.out.println("Logged out");
 				} else {
