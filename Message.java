@@ -2,13 +2,15 @@ import java.io.*;
 import java.util.*;
 
 public class Message implements Serializable {
+	private String from = null;
 	private String recipient = null;
 	private String data = "";
 
 	private static String STORAGE_FILENAME = "messages.dat";
 	private static File STORAGE = new File(STORAGE_FILENAME);
 
-	public Message(String r) {
+	public Message(String f, String r) {
+		from = f;
 		recipient = r;
 	}
 
@@ -16,37 +18,33 @@ public class Message implements Serializable {
 		data += str + "\n";
 	}
 
-	public static Message load(String user) {
+	public String toString() {
+		return "To: " + recipient + "\nFrom: "  + from + "\n" + data;
 	}
 
-	public boolean store() {
+	public static List<Message> readFromFile() {
 		ObjectInputStream ois = null;
-		List<Message> all = null;;
+		List<Message> all = null;
 		try {
 			all = new ArrayList<Message>();
 			ois = new ObjectInputStream(new FileInputStream(STORAGE));
-			while (ois.available() > 0) {
-				all.add((Message)ois.readObject());
-			}
-			all.add(this);
-		} catch (IOException e) {
-			System.out.println("Error while reading from storage file");
-		} catch (ClassNotFoundException e) {
-			System.out.println("Couldn't find Message class");
-			return false;
-		} finally  {
-			try {
-				if (ois != null) {
-					ois.close();
+			while (true) {
+				try {
+					all.add((Message)ois.readObject());
+				} catch (EOFException e) {
+					break;
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
-			if (all == null) {
-				System.out.println("Storing message failed because old messages could nt be loaded");
-				return false;
-			}
+		} catch (IOException e) {
+			System.out.println("Error reading from messages.dat");
+			return null;
+		} catch (ClassNotFoundException e) {
+			System.out.println("Couldn't find class Message");
 		}
+		return all;
+	}
+
+	public static boolean writeToFile(List<Message> all) {
 		ObjectOutputStream ous = null;
 		try {
 			ous = new ObjectOutputStream(new FileOutputStream(STORAGE));
@@ -76,5 +74,28 @@ public class Message implements Serializable {
 			}
 		}
 		return true;
+	}
+	
+	public static List<Message> load(String user) {
+		List<Message> all = readFromFile();
+		List<Message> forUser = new ArrayList<Message>();
+		if (all == null) return forUser;
+		for (Message m : all) {
+			if (m.recipient.equals(user)) {
+				forUser.add(m);
+			}
+		}
+		for (Message m : forUser) {
+			all.remove(m);
+		}
+		writeToFile(all);
+		return forUser;
+	}
+
+	public boolean store() {
+		List<Message> all = readFromFile();
+		if (all == null) all = new ArrayList<Message>();
+		all.add(this);
+		return writeToFile(all);
 	}
 }

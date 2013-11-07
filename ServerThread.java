@@ -100,7 +100,7 @@ public class ServerThread extends Thread {
 					}
 					out.println("354 Enter message, ending with a \".\" on a line by itself.");
 					System.out.println("Enter message, ending with a \".\" on a line by itself.");
-					Message m = new Message(messageRecipient);
+					Message m = new Message(this.loggedInUser, messageRecipient);
 					String dataLine;
 					while (!(dataLine = in.readLine()).equals(".")) {
 						m.writeln(dataLine);
@@ -137,6 +137,30 @@ public class ServerThread extends Thread {
 					messageRecipient = null;
 					out.println("221 Logged out");
 					System.out.println("Logged out");
+				} else if (line.startsWith("RETR")) {
+					if (command.length != 1) {
+						out.println("500 Wrong number of arguments");
+						System.out.println("Wrong number of arguments");
+						continue;
+					} else if (this.loggedInUser == null) {
+						out.println("500 No user logged in");
+						System.out.println("No user logged in");
+						continue;
+					}
+					List<Message> messages = Message.load(this.loggedInUser);
+					if (messages.size() == 0) {
+						out.println("250 No messages");
+						System.out.println("No messages");
+					} else {
+						for (Message m : messages) {
+							out.println(m);
+							System.out.println(m);
+							out.println("|||");
+							System.out.println("|||");
+						}
+					}
+					out.println("250 No more messages");
+					System.out.println("No more messages");
 				} else {
 					out.println("500 Command \"" + command[0] + "\" was not recognized");
 				}
