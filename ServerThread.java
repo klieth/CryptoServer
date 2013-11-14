@@ -158,9 +158,9 @@ public class ServerThread extends Thread {
 							out.println("|||");
 							System.out.println("|||");
 						}
+						out.println("250 No more messages");
+						System.out.println("No more messages");
 					}
-					out.println("250 No more messages");
-					System.out.println("No more messages");
 				} else {
 					out.println("500 Command \"" + command[0] + "\" was not recognized");
 				}
