@@ -114,8 +114,8 @@ public class ServerThread extends Thread {
 							break;
 						}
 					}
-					/*
 					System.out.println("Sending message to: " + messageRecipient);
+					/*
 					System.out.println(messageData);
 					*/
 					inMessage = false;
